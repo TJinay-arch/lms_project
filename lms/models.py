@@ -11,6 +11,11 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = "Курс"
+        verbose_name_plural = "Курсы"
+        ordering = ["id"]
+
 
 class Lesson(models.Model):
     title = models.CharField(max_length=255)
@@ -25,3 +30,7 @@ class Lesson(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "Урок"
+        verbose_name_plural = "Уроки"
