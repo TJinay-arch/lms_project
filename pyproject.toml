@@ -10,6 +10,9 @@ python = "^3.13"
 django = "^6.0.3"
 djangorestframework = "^3.16.1"
 pillow = "^12.1.1"
+python-dotenv = "^1.2.2"
+dotenv = "^0.9.9"
+psycopg2-binary = "^2.9.11"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -31,3 +34,6 @@ exclude = 'venv'
 [tool.black]
 line-length = 119
 exclude = '\.git'
+
+[tool.isort]
+profile = "black"
