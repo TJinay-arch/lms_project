@@ -1,6 +1,6 @@
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import AllowAny, BasePermission
+from rest_framework.permissions import AllowAny
 
 from .models import Payment, User
 from .serializers import PaymentSerializer, UserRegisterSerializer, UserSerializer

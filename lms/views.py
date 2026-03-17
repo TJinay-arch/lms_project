@@ -1,14 +1,19 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from users.permissions import IsOwner, IsModerator
-from .models import Course, Lesson
+from .models import Course, Lesson, Subscription
+from .paginators import CoursePaginator
 from .serializers import CourseSerializer, LessonSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    pagination_class = CoursePaginator
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -56,3 +61,36 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
+
+
+class SubscriptionAPIView(APIView):
+
+    def post(self, request):
+
+        user = request.user
+
+        course_id = request.data.get("course_id")
+
+        course = get_object_or_404(Course, id=course_id)
+
+        subscription = Subscription.objects.filter(
+            user=user,
+            course=course
+        )
+
+        if subscription.exists():
+
+            subscription.delete()
+
+            message = "подписка удалена"
+
+        else:
+
+            Subscription.objects.create(
+                user=user,
+                course=course
+            )
+
+            message = "подписка добавлена"
+
+        return Response({"message": message})
