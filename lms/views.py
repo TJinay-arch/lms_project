@@ -6,14 +6,14 @@ from rest_framework.views import APIView
 
 from users.permissions import IsOwner, IsModerator
 from .models import Course, Lesson, Subscription
-from .paginators import CoursePaginator
+from .paginators import LMSPaginator
 from .serializers import CourseSerializer, LessonSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    pagination_class = CoursePaginator
+    pagination_class = LMSPaginator
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -38,6 +38,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonListAPIView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    pagination_class = LMSPaginator
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
@@ -61,14 +62,15 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
+    permission_classes = [IsAuthenticated, IsModerator | IsOwner]
 
 
 class SubscriptionAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
 
         user = request.user
-
         course_id = request.data.get("course_id")
 
         course = get_object_or_404(Course, id=course_id)
@@ -79,18 +81,14 @@ class SubscriptionAPIView(APIView):
         )
 
         if subscription.exists():
-
             subscription.delete()
-
             message = "подписка удалена"
 
         else:
-
             Subscription.objects.create(
                 user=user,
                 course=course
             )
-
             message = "подписка добавлена"
 
         return Response({"message": message})
