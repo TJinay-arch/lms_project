@@ -6,6 +6,11 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = "__all__"
+        read_only_fields = (
+            "user",
+            "stripe_session_id",
+            "payment_url",
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -36,3 +41,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+
+

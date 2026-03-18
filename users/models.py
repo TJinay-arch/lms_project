@@ -58,7 +58,8 @@ class Payment(models.Model):
     )
 
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-
+    stripe_session_id = models.CharField(max_length=255, blank=True, null=True)
+    payment_url = models.URLField(blank=True, null=True)
     payment_method = models.CharField(
         max_length=20,
         choices=PAYMENT_METHODS
