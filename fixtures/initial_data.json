@@ -1,0 +1,75 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$test$testhash",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "user@test.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-03-15T10:00:00Z",
+      "phone": "123456789",
+      "city": "Moscow",
+      "avatar": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "lms.course",
+    "pk": 1,
+    "fields": {
+      "title": "Python Backend",
+      "description": "Курс по Django",
+      "preview": null
+    }
+  },
+  {
+    "model": "lms.lesson",
+    "pk": 1,
+    "fields": {
+      "title": "Django Models",
+      "description": "Работа с ORM",
+      "preview": null,
+      "video_url": "https://youtube.com/test",
+      "course": 1
+    }
+  },
+  {
+    "model": "lms.lesson",
+    "pk": 2,
+    "fields": {
+      "title": "Django Views",
+      "description": "Работа с API",
+      "preview": null,
+      "video_url": "https://youtube.com/test2",
+      "course": 1
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "payment_date": "2026-03-10T12:00:00Z",
+      "course": 1,
+      "lesson": null,
+      "amount": "1000.00",
+      "payment_method": "transfer"
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "payment_date": "2026-03-11T12:00:00Z",
+      "course": null,
+      "lesson": 1,
+      "amount": "300.00",
+      "payment_method": "cash"
+    }
+  }
+]
