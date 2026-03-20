@@ -16,6 +16,7 @@ class Course(models.Model):
         null=True,
         blank=True
     )
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -52,8 +53,8 @@ class Lesson(models.Model):
         verbose_name_plural = "Уроки"
         ordering = ["id"]
 
-class Subscription(models.Model):
 
+class Subscription(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE

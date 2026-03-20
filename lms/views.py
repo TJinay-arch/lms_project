@@ -3,11 +3,13 @@ from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.utils.timezone import now
+from datetime import timedelta
 from users.permissions import IsOwner, IsModerator
 from .models import Course, Lesson, Subscription
 from .paginators import LMSPaginator
 from .serializers import CourseSerializer, LessonSerializer
+from .tasks import send_course_update_email
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -17,6 +19,16 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        course = self.get_object()
+
+        last_update = course.updated_at
+
+        course = serializer.save()
+
+        if not last_update or now() - last_update > timedelta(hours=4):
+            send_course_update_email.delay(course.id)
 
     def get_permissions(self):
 
