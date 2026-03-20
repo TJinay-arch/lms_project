@@ -10,6 +10,20 @@ python = "^3.13"
 django = "^6.0.3"
 djangorestframework = "^3.16.1"
 pillow = "^12.1.1"
+python-dotenv = "^1.2.2"
+dotenv = "^0.9.9"
+psycopg2-binary = "^2.9.11"
+django-filter = "^25.2"
+djangorestframework-simplejwt = "^5.5.1"
+coverage = "^7.13.4"
+pytest = "^9.0.2"
+pytest-django = "^4.12.0"
+drf-yasg = "^1.21.15"
+django-cors-headers = "^4.9.0"
+stripe = "^14.4.1"
+celery = "^5.6.2"
+redis = "^7.3.0"
+django-celery-beat = "^2.9.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -31,3 +45,10 @@ exclude = 'venv'
 [tool.black]
 line-length = 119
 exclude = '\.git'
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
