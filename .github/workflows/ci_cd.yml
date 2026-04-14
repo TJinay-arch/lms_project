@@ -39,6 +39,7 @@ jobs:
 
       - name: Run tests
         env:
+          SECRET_KEY: 12345
           DATABASE_NAME: test_db
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
