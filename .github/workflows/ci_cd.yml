@@ -2,7 +2,8 @@ name: CI/CD
 
 on:
   push:
-    branches: [ '*' ]
+    branches:
+      - '*' # Run on all branches
 
 jobs:
   test:
