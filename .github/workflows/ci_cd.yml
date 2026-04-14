@@ -1,6 +1,6 @@
 name: CI/CD
 
-on: [ push, pull_request ]
+on: [ push ]
 
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
         run: |
           pip install poetry
           poetry config virtualenvs.create false
-          poetry install
+          poetry install --no-root 
 
       - name: Run tests
         env:
