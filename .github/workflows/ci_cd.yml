@@ -60,7 +60,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /root/lms_project
+            cd /lms_project
             git pull
             source venv/bin/activate
             pip install -r requirements.txt
