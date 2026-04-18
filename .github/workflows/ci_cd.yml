@@ -63,12 +63,8 @@ jobs:
             set -e
             cd /home/${{ secrets.SERVER_USER }}/lms_project
             git pull
-            # Копируем .env на сервер (если его ещё нет)
-            if [ ! -f .env ]; then
-              echo "Copying .env file to server..."
-              scp -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no \
-                ${{ github.workspace }}/.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/*/lms_project/.env
-            fi
+            # Создаём .env из секрета GitHub
+            echo "${{ secrets.DJANGO_ENV_FILE }}" > .env
             
             # Проверка и установка Poetry
             if ! command -v poetry &> /dev/null; then
