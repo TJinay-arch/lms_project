@@ -60,10 +60,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            ls
-            cd lms_project
+            set -e
+            cd /root/lms_project
             git pull
-            source venv/bin/activate
-            pip install -r requirements.txt
-            python manage.py migrate
-            systemctl restart gunicorn
+            poetry install --no-dev --only main
+            python3 manage.py migrate
+            sudo systemctl restart gunicorn
