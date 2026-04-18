@@ -63,11 +63,19 @@ jobs:
             set -e
             cd /home/${{ secrets.SERVER_USER }}/lms_project
             git pull
+            # Копируем .env на сервер (если его ещё нет)
+            if [ ! -f .env ]; then
+              echo "Copying .env file to server..."
+              scp -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no \
+                ${{ github.workspace }}/.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/*/lms_project/.env
+            fi
+            
             # Проверка и установка Poetry
             if ! command -v poetry &> /dev/null; then
               echo "Poetry not found, installing..."
               curl -sSL https://install.python-poetry.org | python3 -
             fi
+            
             /home/$USER/.local/bin/poetry install --only main
             /home/$USER/.local/bin/poetry run python3 manage.py migrate
             sudo systemctl restart gunicorn
