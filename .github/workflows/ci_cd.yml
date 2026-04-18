@@ -69,5 +69,5 @@ jobs:
               curl -sSL https://install.python-poetry.org | python3 -
             fi
             /home/$USER/.local/bin/poetry install --only main
-            python3 manage.py migrate
+            /home/$USER/.local/bin/poetry run python3 manage.py migrate
             sudo systemctl restart gunicorn
