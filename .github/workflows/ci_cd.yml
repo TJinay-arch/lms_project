@@ -61,7 +61,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
-            cd /root/lms_project
+            cd /home/${{ secrets.SERVER_USER }}/lms_project
             git pull
             poetry install --no-dev --only main
             python3 manage.py migrate
