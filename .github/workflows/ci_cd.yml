@@ -63,6 +63,11 @@ jobs:
             set -e
             cd /home/${{ secrets.SERVER_USER }}/lms_project
             git pull
+            # Проверка и установка Poetry
+            if ! command -v poetry &> /dev/null; then
+              echo "Poetry not found, installing..."
+              curl -sSL https://install.python-poetry.org | python3 -
+            fi
             poetry install --no-dev --only main
             python3 manage.py migrate
             sudo systemctl restart gunicorn
