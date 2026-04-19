@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -104,3 +105,6 @@ class SubscriptionAPIView(APIView):
             message = "подписка добавлена"
 
         return Response({"message": message})
+
+def health_check(request):
+    return HttpResponse("OK")

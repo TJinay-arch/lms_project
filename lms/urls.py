@@ -21,5 +21,5 @@ urlpatterns += [
     path("lessons/create/", LessonCreateAPIView.as_view()),
     path("lessons/<int:pk>/update/", LessonUpdateAPIView.as_view()),
     path("lessons/<int:pk>/delete/", LessonDestroyAPIView.as_view()),
-    path("subscribe/", SubscriptionAPIView.as_view())
+    path("subscribe/", SubscriptionAPIView.as_view()),
 ]
