@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ '*' ]
 
 jobs:
   test:
@@ -46,14 +46,15 @@ jobs:
           DATABASE_HOST: localhost
           REDIS_HOST: localhost
         run: |
-          pytest
+          python manage.py migrate
+          pytest -v
 
   deploy:
     runs-on: ubuntu-latest
     needs: test
 
     steps:
-      - name: Deploy to server
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -61,8 +62,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /root/lms_project
-            git pull
-            source venv/bin/activate
-            pip install -r requirements.txt
-            python manage.py migrate
-            systemctl restart gunicorn
+
+            git pull origin develop
+
+            docker compose down
+            docker compose up -d --build
