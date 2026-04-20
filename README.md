@@ -1,41 +1,51 @@
-# 🚀 LMS Project (Django + Docker + Celery)
+# LMS Project (Django + Docker + Celery + CI/CD)
+
+---
+
+## 🌐 Демо (развёрнутый сервер)
+
+- http://81.26.179.6/
+- http://81.26.179.6/api/
+- http://81.26.179.6/admin/
+- http://81.26.179.6/swagger/
+
+---
 
 ## 📦 Описание проекта
 
-Проект представляет собой LMS-систему с поддержкой:
+LMS‑система, реализованная с использованием:
 
-* Django + DRF
-* PostgreSQL
-* Redis
-* Celery (асинхронные задачи)
-* Celery Beat (периодические задачи)
+- Django + Django REST Framework;
+- PostgreSQL;
+- Redis;
+- Celery (асинхронные задачи);
+- Celery Beat (периодические задачи);
+- Nginx (reverse proxy);
+- Docker / Docker Compose;
+- GitHub Actions (CI/CD).
 
 ---
 
 ## ⚙️ Требования
 
-Перед запуском убедитесь, что установлен:
-
-* Docker Desktop
+- Docker Desktop;
+- Git;
+- Python 3.13 (для локальной разработки).
 
 ---
 
-## 📁 Настройка окружения
+## 🧪 Локальный запуск
 
-### 1. Клонировать репозиторий
+### 1. Клонирование репозитория
 
 ```bash
 git clone <repo_url>
 cd lms_project
-```
 
----
+ Создание .env
+Создать файл .env в корне проекта:
 
-### 2. Создать файл `.env`
-
-Создайте файл `.env` в корне проекта:
-
-```env
+env
 DEBUG=True
 SECRET_KEY=your_secret_key
 
@@ -47,193 +57,111 @@ DATABASE_PORT=5432
 
 REDIS_HOST=redis
 REDIS_PORT=6379
-
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PUBLIC_KEY=pk_test_...
-```
-
----
-
-## 🚀 Запуск проекта
-
-```bash
+3. Запуск проекта
+bash
 docker compose up --build
-```
+4. Проверка локально
+Django: ;
 
-После запуска будут подняты сервисы:
+Admin: ;
 
-* backend (Django)
-* PostgreSQL
-* Redis
-* Celery worker
-* Celery Beat
+Swagger: .
 
----
+🐳 Архитектура Docker
+Сервисы проекта:
 
-## ✅ Проверка работоспособности
+web → Django + Gunicorn;
 
----
+db → PostgreSQL;
 
-### 🔹 1. Django (backend)
+redis → брокер сообщений;
 
-Открыть в браузере:
+celery → worker задач;
 
-```
-http://localhost:8000
-```
+celery_beat → планировщик задач;
 
-✔ Ожидаемый результат:
+nginx → reverse proxy.
 
-* API доступен
-* или стандартная страница Django (404 / DRF)
+🌍 Продакшн (сервер)
+📌 Адрес сервера
 
----
+📌 Структура деплоя
+При push в ветку feature/ci_cd:
 
-### 🔹 2. PostgreSQL
+Запуск CI (GitHub Actions).
 
-Подключение к базе:
+Прогон тестов (pytest).
 
-```bash
-docker exec -it lms_db psql -U postgres
-```
+Проверка линтера (flake8).
 
-Проверка:
+Проверка Docker build.
 
-```sql
-\l
-```
+Деплой на сервер через SSH.
 
-✔ Ожидаемый результат:
+Перезапуск контейнеров через Docker Compose.
 
-* отображается список баз данных
+⚙️ CI/CD (GitHub Actions)
+Файл: .github/workflows/ci_cd.yml
 
----
+Этапы pipeline:
 
-### 🔹 3. Redis
+Test stage:
 
-Подключение:
+PostgreSQL (service);
 
-```bash
-docker exec -it lms_redis redis-cli
-```
+Redis (service);
 
-Проверка:
+migrations;
 
-```bash
-ping
-```
+pytest.
 
-✔ Ответ:
+Lint stage:
 
-```
-PONG
-```
+flake8 — проверка стиля кода.
 
----
+Build stage:
 
-### 🔹 4. Celery Worker
+сборка Docker‑образов.
 
-Просмотр логов:
+Deploy stage:
 
-```bash
-docker logs lms_celery
-```
+SSH‑подключение к серверу;
 
-✔ Ожидаемый результат:
+git pull;
 
-```
-ready
-```
+docker compose down;
 
----
+docker compose up -d --build.
 
-### 🔹 5. Celery Beat
+🔐 GitHub Secrets
+Настроены в репозитории:
 
-Просмотр логов:
+SERVER_HOST;
 
-```bash
-docker logs lms_celery_beat
-```
+SERVER_USER;
 
-✔ Ожидаемый результат:
+SSH_KEY.
 
-```
-Scheduler: Sending due task
-```
+🖥 Настройка сервера
+1. Установка Docker
+bash
+apt update
+apt install docker.io docker-compose -y
+2. Клонирование проекта
+bash
+git clone <repo_url>
+cd lms_project
+3. Запуск на сервере
+bash
+docker compose up -d --build
+4. Открытые порты
+22 (SSH);
 
----
+80 (HTTP);
 
-### 🔹 6. Проверка асинхронных задач
+443 (HTTPS).
 
-1. Выполните действие в API (например, обновление курса)
-2. Проверьте логи Celery:
-
-```bash
-docker logs lms_celery
-```
-
-✔ Ожидаемый результат:
-
-```
-Task send_course_update_email received
-```
-
----
-
-## 🛠️ Полезные команды
-
-Остановить контейнеры:
-
-```bash
+🚀 Ручной деплой
+bash
 docker compose down
-```
-
-Пересобрать проект:
-
-```bash
-docker compose up --build
-```
-
-Посмотреть контейнеры:
-
-```bash
-docker ps
-```
-
----
-
-## ❗ Важно
-
-* Не используйте `localhost` для подключения к БД и Redis внутри Docker
-* Используйте:
-
-  * `DATABASE_HOST=db`
-  * `REDIS_HOST=redis`
-
----
-
-## 📌 Примечание
-
-Проект работает в тестовом режиме, включая интеграцию с Stripe (используются тестовые ключи).
-
-## 🌐 Настройка сервера
-
-1. Установлен Python, PostgreSQL, Redis
-2. Настроен Gunicorn
-3. Настроен Nginx
-4. Настроен systemd для автозапуска
-5. Открыты только порты 22, 80 и 443
-
-- Используются SSH-ключи
-- Парольный вход отключен
-- Настроен UFW (firewall)
-
-## CI/CD
-
-- При push запускаются тесты
-- При успешных тестах выполняется деплой
-- Деплой происходит через Docker Compose
-
-## Deploy
-
 docker compose up -d --build
