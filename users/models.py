@@ -2,7 +2,8 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from lms.models import Lesson, Course
+from lms.models import Course, Lesson
+
 from .managers import UserManager
 
 
@@ -35,35 +36,18 @@ class Payment(models.Model):
         ("transfer", "Перевод на счет"),
     )
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="payments"
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="payments")
 
     payment_date = models.DateTimeField(auto_now_add=True)
 
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True)
 
-    lesson = models.ForeignKey(
-        Lesson,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
+    lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True, blank=True)
 
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     stripe_session_id = models.CharField(max_length=255, blank=True, null=True)
     payment_url = models.URLField(blank=True, null=True)
-    payment_method = models.CharField(
-        max_length=20,
-        choices=PAYMENT_METHODS
-    )
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
 
     class Meta:
         verbose_name = "Платеж"

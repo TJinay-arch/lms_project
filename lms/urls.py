@@ -7,7 +7,8 @@ from .views import (
     LessonDestroyAPIView,
     LessonListAPIView,
     LessonRetrieveAPIView,
-    LessonUpdateAPIView, SubscriptionAPIView,
+    LessonUpdateAPIView,
+    SubscriptionAPIView,
 )
 
 router = DefaultRouter()

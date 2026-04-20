@@ -1,12 +1,15 @@
+from datetime import timedelta
+
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.utils.timezone import now
-from datetime import timedelta
-from users.permissions import IsOwner, IsModerator
+
+from users.permissions import IsModerator, IsOwner
+
 from .models import Course, Lesson, Subscription
 from .paginators import LMSPaginator
 from .serializers import CourseSerializer, LessonSerializer
@@ -88,23 +91,18 @@ class SubscriptionAPIView(APIView):
 
         course = get_object_or_404(Course, id=course_id)
 
-        subscription = Subscription.objects.filter(
-            user=user,
-            course=course
-        )
+        subscription = Subscription.objects.filter(user=user, course=course)
 
         if subscription.exists():
             subscription.delete()
             message = "подписка удалена"
 
         else:
-            Subscription.objects.create(
-                user=user,
-                course=course
-            )
+            Subscription.objects.create(user=user, course=course)
             message = "подписка добавлена"
 
         return Response({"message": message})
+
 
 def health_check(request):
     return HttpResponse("OK")

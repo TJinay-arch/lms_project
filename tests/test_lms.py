@@ -1,6 +1,6 @@
 import pytest
-from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
+from rest_framework.test import APIClient
 
 from lms.models import Course, Lesson
 
@@ -14,10 +14,7 @@ def client():
 
 @pytest.fixture
 def user():
-    return User.objects.create_user(
-        email="test@test.com",
-        password="12345"
-    )
+    return User.objects.create_user(email="test@test.com", password="12345")
 
 
 @pytest.fixture
@@ -28,11 +25,7 @@ def auth_client(client, user):
 
 @pytest.fixture
 def course(user):
-    return Course.objects.create(
-        title="Python",
-        description="Programming",
-        owner=user
-    )
+    return Course.objects.create(title="Python", description="Programming", owner=user)
 
 
 @pytest.fixture
@@ -42,7 +35,7 @@ def lesson(user, course):
         description="Intro",
         course=course,
         owner=user,
-        video_url="https://www.youtube.com/watch?v=test"
+        video_url="https://www.youtube.com/watch?v=test",
     )
 
 
@@ -50,12 +43,10 @@ def lesson(user, course):
 # COURSE TESTS
 # ======================
 
+
 @pytest.mark.django_db
 def test_create_course(auth_client):
-    data = {
-        "title": "Django",
-        "description": "Backend framework"
-    }
+    data = {"title": "Django", "description": "Backend framework"}
 
     response = auth_client.post("/api/courses/", data)
 
@@ -65,10 +56,7 @@ def test_create_course(auth_client):
 
 @pytest.mark.django_db
 def test_subscribe(auth_client, course):
-    response = auth_client.post(
-        "/api/subscribe/",
-        {"course_id": course.id}
-    )
+    response = auth_client.post("/api/subscribe/", {"course_id": course.id})
 
     assert response.status_code == 200
     assert response.data["message"] == "подписка добавлена"
@@ -76,15 +64,9 @@ def test_subscribe(auth_client, course):
 
 @pytest.mark.django_db
 def test_unsubscribe(auth_client, course):
-    auth_client.post(
-        "/api/subscribe/",
-        {"course_id": course.id}
-    )
+    auth_client.post("/api/subscribe/", {"course_id": course.id})
 
-    response = auth_client.post(
-        "/api/subscribe/",
-        {"course_id": course.id}
-    )
+    response = auth_client.post("/api/subscribe/", {"course_id": course.id})
 
     assert response.data["message"] == "подписка удалена"
 
@@ -93,13 +75,14 @@ def test_unsubscribe(auth_client, course):
 # LESSON TESTS
 # ======================
 
+
 @pytest.mark.django_db
 def test_create_lesson(auth_client, course):
     data = {
         "title": "Lesson 2",
         "description": "Basics",
         "video_url": "https://www.youtube.com/watch?v=test",
-        "course": course.id
+        "course": course.id,
     }
 
     response = auth_client.post("/api/lessons/create/", data)
@@ -130,13 +113,10 @@ def test_update_lesson(auth_client, lesson, course):
         "title": "Updated lesson",
         "description": "New text",
         "video_url": "https://www.youtube.com/watch?v=test",
-        "course": course.id
+        "course": course.id,
     }
 
-    response = auth_client.put(
-        f"/api/lessons/{lesson.id}/update/",
-        data
-    )
+    response = auth_client.put(f"/api/lessons/{lesson.id}/update/", data)
 
     assert response.status_code == 200
 
@@ -146,9 +126,7 @@ def test_update_lesson(auth_client, lesson, course):
 
 @pytest.mark.django_db
 def test_delete_lesson(auth_client, lesson):
-    response = auth_client.delete(
-        f"/api/lessons/{lesson.id}/delete/"
-    )
+    response = auth_client.delete(f"/api/lessons/{lesson.id}/delete/")
 
     assert response.status_code == 204
     assert Lesson.objects.count() == 0

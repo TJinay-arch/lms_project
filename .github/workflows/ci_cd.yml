@@ -42,6 +42,11 @@ jobs:
           pip install poetry
           poetry config virtualenvs.create false
           poetry install --no-interaction --no-ansi
+      - name: Format check
+        run: |
+          pip install black isort
+          black --check .
+          isort --check-only .
 
       - name: Run Lint (flake8)
         run: |
