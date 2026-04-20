@@ -40,6 +40,8 @@ jobs:
 
       - name: Run tests
         env:
+          SECRET_KEY: test-secret-key
+          DEBUG: "False"
           DATABASE_NAME: test_db
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
