@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ feature/ci_cd ]
+    branches: [ feature/final_task ]
 
 jobs:
   test:
